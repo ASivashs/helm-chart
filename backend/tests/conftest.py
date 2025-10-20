@@ -2,6 +2,7 @@ import pytest
 from app import create_app
 from app.extensions import db, cache
 
+
 class TestConfig:
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"  # in-memory DB

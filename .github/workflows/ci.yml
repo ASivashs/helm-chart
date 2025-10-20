@@ -2,7 +2,7 @@ name: master
 
 on:
   push:
-    branches: 
+    branches:
     - main
 
 jobs:
@@ -14,14 +14,14 @@ jobs:
 
     - name: Configure python
       uses: actions/setup-python@v4
-      with: 
+      with:
         python-version: "3.11"
         cache: "pip"
         cache-dependency-path: backend/requirements.txt
-    
+
     - name: Install Python linters
       run: pip install flake8 isort black
-        
+
     - name: Run Python linters
       run: |
         echo "=== Running Flake8 ==="
@@ -31,7 +31,6 @@ jobs:
         echo "=== Running Isort ==="
         isort backend/ --check-only --diff
         echo " All Python linting checks passed!"
-
 
   lint-frontend:
     runs-on: ubuntu-24.04
@@ -43,10 +42,9 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        
 
     - name: Install test utils
-      run: npm install eslint
+      run: npm install eslint --save-dev
 
     - name: Run linting
-      run: cd frontend/ && npm run lint 
+      run: cd frontend/ && npm run lint
