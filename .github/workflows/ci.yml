@@ -22,15 +22,14 @@ jobs:
     - name: Install Python linters
       run: pip install flake8 isort black
 
-    - name: Run Python linters
-      run: |
-        echo "=== Running Flake8 ==="
-        flake8 --config=backend/.flake8 backend/ || true
-        echo "=== Running Black ==="
-        black backend/ --check --diff || true
-        echo "=== Running Isort ==="
-        isort backend/ --check-only --diff || true
-        echo " All Python linting checks passed!"
+    - name: Run flake8
+      run: flake8 --config=backend/.flake8 backend/ || true
+
+    - name: Run black
+      run: black backend/ --check --diff || true
+
+    - name: Run isort
+      run: isort backend/ --check-only --diff || true
 
   lint-frontend:
     runs-on: ubuntu-24.04
