@@ -25,7 +25,7 @@ jobs:
     - name: Run Python linters
       run: |
         echo "=== Running Flake8 ==="
-        flake8 backend/  
+        flake8 --config=backend/.flake8 backend/  
         echo "=== Running Black ==="
         black backend/ --check --diff
         echo "=== Running Isort ==="
@@ -43,8 +43,8 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: "npm"
-      
+        
+
     - name: Install test utils
       run: npm install ci
 
