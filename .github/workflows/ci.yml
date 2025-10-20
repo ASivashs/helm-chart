@@ -46,7 +46,7 @@ jobs:
         
 
     - name: Install test utils
-      run: npm install ci
+      run: npm install eslint
 
     - name: Run linting
       run: cd frontend/ && npm run lint 

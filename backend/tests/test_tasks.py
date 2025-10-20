@@ -41,4 +41,3 @@ def test_delete_task(client):
     rv = client.delete(f"/api/tasks/{task_id}")
     assert rv.status_code == 200
     assert "deleted" in rv.get_json()["message"]
-
