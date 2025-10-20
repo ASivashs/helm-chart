@@ -20,7 +20,7 @@ jobs:
         cache-dependency-path: backend/requirements.txt
     
     - name: Install Python linters
-        run: pip install flake8 isort black
+      run: pip install flake8 isort black
         
     - name: Run Python linters
       run: |
