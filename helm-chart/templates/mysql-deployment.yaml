@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-mysql
+  labels:
+    {{ include "helm-chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.mysql.replicas }}
+  selector:
+    matchLabels: 
+      app: {{ .Release.Name }}-mysql
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-mysql
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-mysql
+        image: "{{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}"
+        imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
+        ports:
+        - name: {{ .Values.mysql.service.ports.name }} 
+          containerPort: {{ .Values.mysql.service.ports.port }}
+          targetPort: {{ .Values.mysql.service.ports.targetPort }}
+          protocol: {{ .Values.mysql.service.ports.protocol }}
+        env:
+        - name: MYSQL_USER
+          value: "user"
+        - name: MYSQL_PASSWORD
+          value: "user"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "root"
+        - name: MYSQL_HOST
+          value: "{{ .Release.Name }}-mysql"
+        - name: MYSQL_PORT
+          value: "3306"
+        - name: MYSQL_DATABASE
+          value: "app_db"
+        readinessProbe:
+          {{ toYaml .Values.mysql.readinessProbe | nindent 10 }}
+        livenessProbe:
+          {{ toYaml .Values.mysql.livenessProbe | nindent 10 }}
+        volumeMounts:
+          {{ toYaml .Values.mysql.volumeMounts | nindent 10 }}
+      volumes:
+      - name: {{ .Values.mysql.volumes.name }}
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-mysql-pvc

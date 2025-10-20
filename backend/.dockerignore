@@ -1,0 +1,7 @@
+__pycache__
+.pytest_cache
+.flake8
+pyproject.toml
+Dockerfile
+tests
+*Zone.Identifier

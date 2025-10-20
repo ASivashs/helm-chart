@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-frontend
+  labels:
+    {{ include "helm-chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-frontend
+  template:
+    metadata:
+      labels: 
+        app: {{ .Release.Name }}-frontend
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-frontend
+        image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+        imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+        ports:
+        - name: {{ .Values.frontend.service.ports.name }}
+          containerPort: {{ .Values.frontend.service.ports.port }}
+          targetPort: {{ .Values.frontend.service.ports.targetPort }}
+          protocol: {{ .Values.frontend.service.ports.protocol }}
+        env:
+        - name: API_URL
+          value: "{{ .Values.frontend.env.API_URL }}"
+        - name: FE_HOST
+          value: "{{ .Release.Name }}-frontend:80"
+        resources:
+          {{ toYaml .Values.frontend.resources | nindent 10 }}
+        readinessProbe:
+          {{ toYaml .Values.frontend.readinessProbe | nindent 10 }}
+        livenessProbe:
+          {{ toYaml .Values.frontend.livenessProbe | nindent 10 }}
+        

@@ -1,0 +1,116 @@
+services:
+  backend:
+    build:
+      context: "./backend/"
+      dockerfile: "./Dockerfile"
+    environment:
+      - MYSQL_USER=$MYSQL_USER
+      - MYSQL_PASSWORD=$MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - MYSQL_HOST=$MYSQL_HOST
+      - MYSQL_PORT=$MYSQL_PORT
+      - MYSQL_DB=$MYSQL_DB
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - FE_HOST=$FE_HOST
+    env_file:
+      - .env
+    depends_on:
+      - mysql_db
+      - redis_db
+    ports:
+      - 5000:5000
+    restart: always
+    networks:
+      - mysql_network
+      - redis_network
+      - front_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 1m
+
+  frontend:
+    build:
+      context: "./frontend/"
+      dockerfile: "./Dockerfile"
+    environment:
+      - API_URL=$API_URL
+    env_file:
+      - .env
+    ports:
+      - 8080:80
+    depends_on:
+      - backend
+      - redis_db
+      - mysql_db
+    restart: always
+    networks:
+      - front_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/index.html"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  redis_db:
+    image: redis:8.2.2-alpine
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+    env_file:
+      - .env
+    ports:
+      - 6379:6379
+    restart: always
+    networks:
+      - redis_network
+    volumes:
+      - redis_db:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1m
+      timeout: 10s
+      retries: 5
+      start_period: 1m
+
+  mysql_db:
+    image: mysql:8.4.6
+    environment:
+      - MYSQL_USER=$MYSQL_USER
+      - MYSQL_PASSWORD=$MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - MYSQL_HOST=$MYSQL_HOST
+      - MYSQL_DATABASE=$MYSQL_DB
+    env_file:
+      - .env
+    ports:
+      - 3306:3306
+    restart: always
+    networks:
+      - mysql_network
+    volumes:
+      - mysql_db:/var/lob/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 1m
+      timeout: 10s
+      retries: 5
+      start_period: 2m
+
+networks:
+  mysql_network:
+    driver: bridge
+
+  redis_network:
+    driver: bridge
+
+  front_network:
+    driver: bridge
+
+volumes:
+  mysql_db:
+  redis_db:
