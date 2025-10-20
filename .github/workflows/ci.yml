@@ -19,11 +19,18 @@ jobs:
         cache: "pip"
         cache-dependency-path: backend/requirements.txt
     
-    - name: Install test utils
-      run: pip install tox
-
-    - name: Run linting
-      run: tox -e lint
+    - name: Install Python linters
+        run: pip install flake8 isort black
+        
+    - name: Run Python linters
+      run: |
+        echo "=== Running Flake8 ==="
+        flake8 backend/  
+        echo "=== Running Black ==="
+        black backend/ --check --diff
+        echo "=== Running Isort ==="
+        isort backend/ --check-only --diff
+        echo " All Python linting checks passed!"
 
 
   lint-frontend:
@@ -42,4 +49,4 @@ jobs:
       run: npm install ci
 
     - name: Run linting
-      run: npm run lint 
+      run: cd frontend/ && npm run lint 
