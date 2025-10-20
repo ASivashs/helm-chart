@@ -44,7 +44,7 @@ jobs:
 
     - name: Install and run ESLint
       run: |
-        cd apps/frontend
+        cd frontend/
         npm install eslint@9.0.0 --save-dev
         npm install
         npm run lint
