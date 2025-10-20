@@ -42,8 +42,9 @@ jobs:
       with:
         node-version: '18'
 
-    - name: Install test utils
-      run: npm install eslint --save-dev
-
-    - name: Run linting
-      run: cd frontend/ && npm run lint
+    - name: Install and run ESLint
+      run: |
+        cd apps/frontend
+        npm install eslint@9.0.0 --save-dev
+        npm install
+        npm run lint
