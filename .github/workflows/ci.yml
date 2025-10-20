@@ -43,12 +43,3 @@ jobs:
 
     - name: Run linting
       run: npm run lint 
-
-
-  test:
-    
-  
-  build-backend:
-
-
-  build-frontend:
