@@ -5,6 +5,11 @@ on:
     branches:
     - main
 
+env:
+  REGISTRY: docker.io
+  BACKEND_IMAGE_NAME: antoni0832/backend-app
+  FRONTEND_IMAGE_NAME: antoni0832/frontend-app
+
 jobs:
   lint-backend:
     runs-on: ubuntu-24.04
@@ -47,3 +52,49 @@ jobs:
 
     - name: Run linting
       run: cd frontend/ && npm run lint || true
+
+  build-backend:
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up docker hub account
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push Backend image
+      uses: docker/build-push-action@v5
+      with:
+        context: backend/
+        file: backend/Dockerfile
+        push: true
+        tags: ${{ env.BACKEND_IMAGE }}:latest
+        labels: |
+          org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+          org.opencontainers.image.revision=${{ github.sha }}
+
+  build-frontend:
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up docker hub account
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push Frontend image
+      uses: docker/build-push-action@v5
+      with:
+        context: frontend/
+        file: frontend/Dockerfile
+        push: true
+        tags: ${{ env.BACKEND_IMAGE }}:latest
+        labels: |
+          org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+          org.opencontainers.image.revision=${{ github.sha }}
