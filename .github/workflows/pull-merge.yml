@@ -1,0 +1,101 @@
+name: Pull and merge requests
+
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
+
+env:
+  BACKEND_DIR: backend
+  FRONTEND_DIR: frontend
+
+jobs:
+  lint-backend:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout backend repository
+        uses: actions/checkout@v4
+
+      - name: Configure python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: ${{ env.BACKEND_DIR }}/requirements.txt
+
+      - name: Install Python linters
+        run: pip install flake8 isort black
+
+      - name: Run flake8
+        run: flake8 --config=${{ env.BACKEND_DIR }}/.flake8 ${{ env.BACKEND_DIR }} || true
+
+      - name: Run black
+        run: black ${{ env.BACKEND_DIR }} --check --diff || true
+
+      - name: Run isort
+        run: isort ${{ env.BACKEND_DIR }}/ --check-only --diff || true
+
+  lint-frontend:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout frontend repository
+        uses: actions/checkout@v4
+
+      - name: Setup nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install test utils
+        run: cd ${{ env.FRONTEND_DIR }} && npm install eslint --save-dev && npm install
+
+      - name: Run linting
+        run: cd ${{ env.FRONTEND_DIR }} && npm run lint || true
+
+  test-backend:
+    runs-on: ubuntu-24.04
+    needs: [lint-backend]
+    services:
+      mysql:
+        image: mysql:8.4.6
+        env:
+          MYSQL_USER: user
+          MYSQL_PASSWORD: user
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_HOST: mysql_db
+          MYSQL_DB: app_db
+          MYSQL_PORT: 3306
+        options: >-
+          --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        ports:
+          - 3306:3306
+
+      redis:
+        image: redis:8.2.2-alpine
+        env:
+          REDIS_HOST: redis
+          REDIS_PORT: 6379
+        options: >-
+          --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: ${{ env.BACKEND_DIR }}/requirements.txt
+
+      - name: Configure test dependencies
+        run: pip install -r ${{ env.BACKEND_DIR }}/requirements.txt pytest
+
+      - name: Run tests
+        run: |
+          cd ${{ env.BACKEND_DIR }}/  
+          python -m pytest tests/ -v
