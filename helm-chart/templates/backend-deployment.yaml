@@ -45,6 +45,15 @@ spec:
         resources:
           {{ toYaml .Values.backend.resources | nindent 10 }}
         readinessProbe:
-          {{ toYaml .Values.backend.readinessProbe | nindent 10 }}
+          tcpSocket:
+            port: 5000
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 10
         livenessProbe:
-          {{ toYaml .Values.backend.livenessProbe | nindent 10 }}
+          tcpSocket:
+            port: 5000
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 5

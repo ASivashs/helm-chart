@@ -37,9 +37,26 @@ spec:
         - name: MYSQL_DATABASE
           value: "app_db"
         readinessProbe:
-          {{ toYaml .Values.mysql.readinessProbe | nindent 10 }}
+          exec:
+            command:
+            - mysqladmin
+            - ping
+            - -h
+            - localhost
+          initialDelaySeconds: 90
+          periodSeconds: 10
+          timeoutSeconds: 20
         livenessProbe:
-          {{ toYaml .Values.mysql.livenessProbe | nindent 10 }}
+          exec:
+            command:
+            - mysqladmin
+            - ping
+            - -h
+            - localhost
+          initialDelaySeconds: 90
+          periodSeconds: 10
+          timeoutSeconds: 20
+          failureThreshold: 5
         volumeMounts:
           {{ toYaml .Values.mysql.volumeMounts | nindent 10 }}
       volumes:

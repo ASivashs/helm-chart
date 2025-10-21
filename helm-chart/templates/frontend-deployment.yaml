@@ -31,7 +31,18 @@ spec:
         resources:
           {{ toYaml .Values.frontend.resources | nindent 10 }}
         readinessProbe:
-          {{ toYaml .Values.frontend.readinessProbe | nindent 10 }}
+          httpGet:
+            path: index.html
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 10
         livenessProbe:
-          {{ toYaml .Values.frontend.livenessProbe | nindent 10 }}
+          httpGet:
+            path: index.html
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 5
         

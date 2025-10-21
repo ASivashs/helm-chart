@@ -29,9 +29,22 @@ spec:
         - name: REDIS_PORT
           value: "6379"
         readinessProbe:
-          {{ toYaml .Values.redis.readinessProbe | nindent 10 }}
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 90
+          periodSeconds: 10
+          timeoutSeconds: 20
         livenessProbe:
-          {{ toYaml .Values.redis.livenessProbe | nindent 10 }}
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 90
+          periodSeconds: 10
+          timeoutSeconds: 20
+          failureThreshold: 5
         volumeMounts:
           {{ toYaml .Values.redis.volumeMounts | nindent 10 }}
       volumes:

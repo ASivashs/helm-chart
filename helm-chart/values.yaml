@@ -4,16 +4,6 @@ backend:
     repository: antoni0832/backend-app
     tag: latest
     pullPolicy: Always
-  env:
-    MYSQL_USER: "user"
-    MYSQL_PASSWORD: "user"
-    MYSQL_ROOT_PASSWORD: "root"
-    MYSQL_HOST: "mysql_db"
-    MYSQL_PORT: "app_db"
-    MYSQL_DB: "3306"
-    REDIS_HOST: "redis"
-    REDIS_PORT: "6379"
-    FE_HOST: "front:80"
   resources:
     requests:
       memory: 250Mi
@@ -21,19 +11,6 @@ backend:
     limits:
       memory: 400Mi
       cpu: 500m
-  readinessProbe:
-    tcpSocket:
-      port: 5000
-    initialDelaySeconds: 60
-    periodSeconds: 10
-    timeoutSeconds: 10
-  livenessProbe:
-    tcpSocket:
-      port: 5000
-    initialDelaySeconds: 60
-    periodSeconds: 10
-    timeoutSeconds: 10
-    failureThreshold: 5
   service:
     type: ClusterIP
     ports:
@@ -48,8 +25,6 @@ frontend:
     repository: antoni0832/frontend-app
     tag: latest
     pullPolicy: IfNotPresent
-  env:
-    API_URL: http://app.local:5000
   resources:
     requests:
       memory: 100Mi
@@ -57,21 +32,6 @@ frontend:
     limits:
       memory: 200Mi
       cpu: 200m
-  readinessProbe:
-    httpGet:
-      path: index.html
-      port: 80
-    initialDelaySeconds: 10
-    periodSeconds: 5
-    timeoutSeconds: 10
-  livenessProbe:
-    httpGet:
-      path: index.html
-      port: 80
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 10
-    failureThreshold: 5
   service:
     type: ClusterIP
     ports:
@@ -93,33 +53,6 @@ mysql:
       port: 3306
       targetPort: 3306
       protocol: TCP
-  env:
-    MYSQL_USER: "user"
-    MYSQL_PASSWORD: "user"
-    MYSQL_ROOT_PASSWORD: "root"
-    MYSQL_HOST: "mysql_db"
-    MYSQL_DATABASE: "app_db"
-  readinessProbe:
-    exec:
-      command:
-      - mysqladmin
-      - ping
-      - -h
-      - localhost
-    initialDelaySeconds: 90
-    periodSeconds: 10
-    timeoutSeconds: 20
-  livenessProbe:
-    exec:
-      command:
-      - mysqladmin
-      - ping
-      - -h
-      - localhost
-    initialDelaySeconds: 90
-    periodSeconds: 10
-    timeoutSeconds: 20
-    failureThreshold: 5
   volumeMounts:
   - name: mysql-db
     mountPath: /var/lib/mysql
@@ -142,26 +75,6 @@ redis:
       port: 6379
       targetPort: 6379
       protocol: TCP
-  env:
-    REDIS_HOST: "redis"
-    REDIS_PORT: "6379"
-  readinessProbe:
-    exec:
-      command:
-      - redis-cli
-      - ping
-    initialDelaySeconds: 90
-    periodSeconds: 10
-    timeoutSeconds: 20
-  livenessProbe:
-    exec:
-      command:
-      - redis-cli
-      - ping
-    initialDelaySeconds: 90
-    periodSeconds: 10
-    timeoutSeconds: 20
-    failureThreshold: 5
   volumeMounts:
   - name: redis-db
     mountPath: /data
