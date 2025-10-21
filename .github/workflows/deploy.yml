@@ -105,7 +105,7 @@ jobs:
       - name: Package helm
         run: helm package ${{ env.HELM_DIR }} --destination ./charts/
 
-      - name: Release
+      - name: Release artifact
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/master'
         with:
@@ -115,3 +115,9 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload released artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: helm-chart
+          path: charts/
