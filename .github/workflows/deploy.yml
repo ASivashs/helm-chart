@@ -12,6 +12,7 @@ env:
   BACKEND_DIR: backend
   FRONTEND_DIR: frontend
   HELM_DIR: helm-chart
+  RELEASE_DEST_DIR: release
 
 jobs:
   build-backend:
@@ -103,7 +104,7 @@ jobs:
         uses: azure/setup-helm@v4
 
       - name: Package helm
-        run: helm package ${{ env.HELM_DIR }} --destination ./charts/
+        run: helm package ${{ env.HELM_DIR }} --destination ${{ env.RELEASE_DEST_DIR }}
 
       - name: Release artifact
         uses: softprops/action-gh-release@v1
@@ -111,7 +112,7 @@ jobs:
         with:
           tag_name: v${{ github.run_number }}
           name: Release v${{ github.run_number }}
-          files: ./charts/*.tgz
+          files: ${{ env.RELEASE_DEST_DIR }}/*.tgz
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -120,4 +121,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: helm-chart
-          path: charts/
+          path: ${{ env.RELEASE_DEST_DIR }}
