@@ -25,7 +25,7 @@ spec:
           protocol: {{ .Values.frontend.service.ports.protocol }}
         env:
         - name: API_URL
-          value: "{{ .Values.frontend.env.API_URL }}"
+          value: "http://app.local:5000"
         - name: FE_HOST
           value: "{{ .Release.Name }}-frontend:80"
         resources:
