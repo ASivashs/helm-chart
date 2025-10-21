@@ -96,7 +96,9 @@ jobs:
       run: pip install -r backend/requirements.txt pytest
 
     - name: Run tests
-      run: cd backend/ && pytest tests/ -v
+      run: |
+        cd backend/  
+        pytest tests/ -v
 
   build-backend:
     runs-on: ubuntu-24.04
