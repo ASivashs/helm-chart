@@ -107,7 +107,6 @@ jobs:
 
       - name: Release artifact
         uses: softprops/action-gh-release@v1
-        if: github.ref == 'refs/heads/master'
         with:
           tag_name: v${{ github.run_number }}
           name: Release v${{ github.run_number }}
