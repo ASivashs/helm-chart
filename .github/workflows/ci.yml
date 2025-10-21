@@ -93,10 +93,10 @@ jobs:
         cache-dependency-path: backend/requirements.txt
 
     - name: Configure test dependencies
-      run: pip install pytest
+      run: pip install -r requirements.txt pytest
 
     - name: Run tests
-      run: cd backend/ && python -m pytest tests/ -v
+      run: cd backend/ && pytest tests/ -v
 
   build-backend:
     runs-on: ubuntu-24.04
