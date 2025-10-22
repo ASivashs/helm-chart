@@ -192,10 +192,11 @@ jobs:
           path: .chart
 
       - name: Set up Kubernetes config
-        run: echo ${{ secrets.KUBECONFIG }} | base64 -d > /tmp/config
+        run: echo "${{ secrets.KUBECONFIG }}" | base64 -d > /tmp/config
 
       - name: Deploy Helm chart
         env:
           KUBECONFIG: /tmp/config
         run: |
-          helm upgrade --install release .chart/Chart-${{ steps.chart_version.outputs.result }}.tgz --namespace test-runners
+          helm upgrade --install release .chart/Chart-${{ steps.chart_version.outputs.result }}.tgz \
+          --namespace test-runners
