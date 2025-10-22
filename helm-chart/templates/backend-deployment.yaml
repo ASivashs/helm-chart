@@ -43,7 +43,12 @@ spec:
         - name: FE_HOST
           value: "{{ .Release.Name }}-frontend:80"
         resources:
-          {{ toYaml .Values.backend.resources | nindent 10 }}
+          requests:
+            memory: 250Mi
+            cpu: 200m
+          limits:
+            memory: 400Mi
+            cpu: 500m
         readinessProbe:
           tcpSocket:
             port: 5000

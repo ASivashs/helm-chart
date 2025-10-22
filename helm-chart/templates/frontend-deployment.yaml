@@ -29,7 +29,12 @@ spec:
         - name: FE_HOST
           value: "{{ .Release.Name }}-frontend:80"
         resources:
-          {{ toYaml .Values.frontend.resources | nindent 10 }}
+          requests:
+            memory: 100Mi
+            cpu: 100m
+          limits:
+            memory: 200Mi
+            cpu: 200m
         readinessProbe:
           httpGet:
             path: index.html

@@ -4,9 +4,18 @@ on:
   push:
     branches:
       - main
-      - develop
     tags:
       - "v*"
+    paths-ignore:
+      - "*.md"
+      - ".github/workflows/**"
+      - "backend/.dockerignore"
+      - ".gitignore"
+      - "backend/.flake8"
+      - "backend/pyproject.toml"
+      - "frontend/eslint.config.js"
+      - "helm-chart/.helmignore"
+      - "helm-chart/Chart.yaml"
 
 env:
   BACKEND_IMAGE_NAME: antoni0832/backend-app
@@ -23,14 +32,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up docker hub account
+      - name: Set up Docker hub account
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Get Backend tag
+        id: backend-tag
+        uses: mikefarah/yq@v4.40.5
+        with:
+          cmd: yq '.backend.image.tag' ${{ env.BACKEND_DIR }}/values.yaml
 
       - name: Build and push Backend image
         uses: docker/build-push-action@v5
@@ -39,6 +51,7 @@ jobs:
           file: ${{ env.BACKEND_DIR }}/Dockerfile
           push: true
           tags: |
+            ${{ env.BACKEND_IMAGE_NAME }}:${{ steps.backend-tag.outputs.result }}
             ${{ env.BACKEND_IMAGE_NAME }}:sha-${{ github.sha }}  
             ${{ env.BACKEND_IMAGE_NAME }}:latest
           labels: |
@@ -53,14 +66,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up docker hub account
+      - name: Set up Docker hub account
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Get Frontend tag
+        id: frontend-tag
+        uses: mikefarah/yq@v4.40.5
+        with:
+          cmd: yq '.frontend.image.tag' ${{ env.FRONTEND_DIR }}/values.yaml
 
       - name: Build and push Frontend image
         uses: docker/build-push-action@v5
@@ -69,6 +85,7 @@ jobs:
           file: ${{ env.FRONTEND_DIR }}/Dockerfile
           push: true
           tags: |
+            ${{ env.FRONTEND_IMAGE_NAME }}:${{ steps.frontend-tag.outputs.result }}
             ${{ env.FRONTEND_IMAGE_NAME }}:sha-${{ github.sha }}
             ${{ env.FRONTEND_IMAGE_NAME }}:latest
           labels: |
@@ -114,15 +131,17 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          tag_name: ${{ github.ref_name }}
-          name: Chart ${{ github.ref_name }}
+          tag_name: v${{ github.ref_name }}
+          name: Chart v${{ github.ref_name }}
           files: ${{ env.RELEASE_DEST_DIR }}/*.tgz
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload released artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: helm-chart
-          path: ${{ env.RELEASE_DEST_DIR }}
+  deploy:
+    runs-on: ubuntu-24.04
+    needs:
+      - release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4

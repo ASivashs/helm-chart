@@ -5,6 +5,13 @@ on:
     branches:
       - master
       - develop
+    paths-ignore:
+      - "*.md"
+      - ".github/workflows/**"
+      - "backend/.dockerignore"
+      - ".gitignore"
+      - "helm-chart/.helmignore"
+      - "helm-chart/Chart.yaml"
 
 env:
   BACKEND_DIR: backend

@@ -2,15 +2,8 @@ backend:
   replicas: 2
   image:
     repository: antoni0832/backend-app
-    tag: latest
+    tag: 1.0.0
     pullPolicy: Always
-  resources:
-    requests:
-      memory: 250Mi
-      cpu: 200m
-    limits:
-      memory: 400Mi
-      cpu: 500m
   service:
     type: ClusterIP
     ports:
@@ -23,15 +16,8 @@ frontend:
   replicas: 1
   image:
     repository: antoni0832/frontend-app
-    tag: latest
+    tag: 1.0.0
     pullPolicy: IfNotPresent
-  resources:
-    requests:
-      memory: 100Mi
-      cpu: 100m
-    limits:
-      memory: 200Mi
-      cpu: 200m
   service:
     type: ClusterIP
     ports:
