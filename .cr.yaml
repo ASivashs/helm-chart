@@ -3,6 +3,5 @@ owner: ASivashs
 repo: charts
 remote: origin
 target-branch: main
-sign: true
 key: ASivashs
 generate-release-notes: true
