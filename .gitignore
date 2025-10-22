@@ -1,3 +1,7 @@
 task_2.md
 *Zone.Identifier
 .vscode
+kubeconfig.txt
+kubeconfig.yaml
+test-deploy-user.yml
+deploy_commands.txt
