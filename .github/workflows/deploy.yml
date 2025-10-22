@@ -44,8 +44,18 @@ jobs:
         with:
           cmd: yq '.backend.image.tag' ${{ env.HELM_DIR }}/values.yaml
 
+      - name: Check image on Docker hub
+        id: backend-image-exist
+        run: |
+          if docker manifest inspect ${{ env.BACKEND_IMAGE_NAME }}:${{ steps.backend-tag.outputs.result }} > /dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Build and push Backend image
         uses: docker/build-push-action@v5
+        if: ${{ steps.backend-image-exist.exists }} == 'false'
         with:
           context: ${{ env.BACKEND_DIR }}
           file: ${{ env.BACKEND_DIR }}/Dockerfile
@@ -78,8 +88,18 @@ jobs:
         with:
           cmd: yq '.frontend.image.tag' ${{ env.HELM_DIR }}/values.yaml
 
+      - name: Check image on Docker hub
+        id: frontend-image-exist
+        run: |
+          if docker manifest inspect ${{ env.FRONTEND_IMAGE_NAME }}:${{ steps.frontend-tag.outputs.result }} > /dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Build and push Frontend image
         uses: docker/build-push-action@v5
+        if: ${{ steps.frontend-image-exist.exists }} == 'false'
         with:
           context: ${{ env.FRONTEND_DIR }}
           file: ${{ env.FRONTEND_DIR }}/Dockerfile
