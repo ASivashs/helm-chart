@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    tags:
-      - "v*"
     # paths-ignore:
     #   - "*.md"
     #   - ".github/workflows/**"
@@ -27,7 +25,7 @@ env:
 
 jobs:
   build-backend:
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -71,7 +69,7 @@ jobs:
             org.opencontainers.run_id=${{ github.run_id }}
 
   build-frontend:
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -115,7 +113,7 @@ jobs:
             org.opencontainers.run_id=${{ github.run_id }}
 
   lint-helm:
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -128,7 +126,7 @@ jobs:
           helm lint ${{ env.HELM_DIR }}
 
   release:
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
     needs:
       - build-backend
       - build-frontend
@@ -155,21 +153,22 @@ jobs:
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-      # - name: Release artifact
-      #   uses: softprops/action-gh-release@v1
-      #   if: startsWith(github.ref, 'refs/tags/')
-      #   with:
-      #     tag_name: v${{ github.ref_name }}
-      #     name: Chart v${{ github.ref_name }}
-      #     files: ${{ env.RELEASE_DEST_DIR }}/*.tgz
-      #     generate_release_notes: true
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   deploy:
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
     needs:
       - release
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Get chart version
+        id: chart_version
+        run: |
+          VERSION=$(yq '.version' ${{ env.HELM_DIR }}/Chart.yaml)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Chart-${{ steps.chart_version.outputs.version }}
+          path: .chart
