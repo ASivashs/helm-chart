@@ -194,6 +194,11 @@ jobs:
           cat /tmp/config
           echo ===========
 
+      - name: Check config
+        run: |
+          kubectl --kubeconfig=/tmp/config config view --minify
+          kubectl --kubeconfig=/tmp/config cluster-info || true
+
       - name: Deploy Helm chart
         env:
           KUBECONFIG: /tmp/config
