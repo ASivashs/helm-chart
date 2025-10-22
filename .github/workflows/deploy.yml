@@ -55,7 +55,7 @@ jobs:
 
       - name: Build and push Backend image
         uses: docker/build-push-action@v5
-        if: ${{ steps.backend-image-exist.exists }} == 'false'
+        if: ${{ steps.backend-image-exist.outputs.exists }} == 'false'
         with:
           context: ${{ env.BACKEND_DIR }}
           file: ${{ env.BACKEND_DIR }}/Dockerfile
@@ -99,7 +99,7 @@ jobs:
 
       - name: Build and push Frontend image
         uses: docker/build-push-action@v5
-        if: ${{ steps.frontend-image-exist.exists }} == 'false'
+        if: ${{ steps.frontend-image-exist.outputs.exists }} == 'false'
         with:
           context: ${{ env.FRONTEND_DIR }}
           file: ${{ env.FRONTEND_DIR }}/Dockerfile
