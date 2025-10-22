@@ -139,6 +139,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Configure git identity
+        run: |
+          git config --global user.email "username@noreply.github.com"
+          git config --global user.name "username"
+
       - name: Set up Helm
         uses: azure/setup-helm@v4
 
