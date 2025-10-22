@@ -192,7 +192,7 @@ jobs:
           path: .chart
 
       - name: Set up Kubernetes config
-        run: echo "${{ secrets.KUBECONFIG }}" | base64 -d > /tmp/config
+        run: echo "${{ secrets.KUBECONFIG }}" > /tmp/config
 
       - name: Deploy Helm chart
         env:
