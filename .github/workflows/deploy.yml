@@ -188,12 +188,6 @@ jobs:
       - name: Set up Kubernetes config
         run: echo "${{ secrets.KUBECONFIG }}" > /tmp/config
 
-      - name: Check KUBECONFIG
-        run: |
-          echo ===========
-          cat /tmp/config
-          echo ===========
-
       - name: Check config
         run: |
           kubectl --kubeconfig=/tmp/config config view --minify
