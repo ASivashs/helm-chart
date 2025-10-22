@@ -42,7 +42,7 @@ jobs:
         id: backend-tag
         uses: mikefarah/yq@v4.40.5
         with:
-          cmd: yq '.backend.image.tag' ${{ env.BACKEND_DIR }}/values.yaml
+          cmd: yq '.backend.image.tag' ${{ env.HELM_DIR }}/values.yaml
 
       - name: Build and push Backend image
         uses: docker/build-push-action@v5
@@ -76,7 +76,7 @@ jobs:
         id: frontend-tag
         uses: mikefarah/yq@v4.40.5
         with:
-          cmd: yq '.frontend.image.tag' ${{ env.FRONTEND_DIR }}/values.yaml
+          cmd: yq '.frontend.image.tag' ${{ env.HELM_DIR }}/values.yaml
 
       - name: Build and push Frontend image
         uses: docker/build-push-action@v5
