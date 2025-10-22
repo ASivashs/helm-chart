@@ -1,5 +1,6 @@
 import os
 
+
 class Config:
     DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False

@@ -2,7 +2,7 @@ backend:
   replicas: 2
   image:
     repository: antoni0832/backend-app
-    tag: 1.0.1
+    tag: 1.1.0
     pullPolicy: Always
   service:
     type: ClusterIP
@@ -16,7 +16,7 @@ frontend:
   replicas: 1
   image:
     repository: antoni0832/frontend-app
-    tag: 1.0.1
+    tag: 1.1.0
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP

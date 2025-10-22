@@ -1,8 +1,11 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
+
+from ..extensions import cache, db
 from ..models import Task
-from ..extensions import db, cache
+
 
 bp = Blueprint("tasks", __name__, url_prefix="/api/tasks")
+
 
 @bp.route("", methods=["GET"])
 @cache.cached(key_prefix="all_tasks")
