@@ -163,14 +163,20 @@ jobs:
 
       - name: Get chart version
         id: chart_version
-        run: |
-          VERSION=$(yq '.version' ${{ env.HELM_DIR }}/Chart.yaml)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+        uses: mikefarah/yq@v4.40.5
+        with:
+          cmd: yq '.version' ${{ env.HELM_DIR }}/Chart.yaml
+
+      # - name: Get chart version
+      #   id: chart_version
+      #   run: |
+      #     VERSION=$(yq '.version' ${{ env.HELM_DIR }}/Chart.yaml)
+      #     echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: Chart-${{ steps.chart_version.outputs.version }}
+          name: Chart-${{ steps.chart_version.outputs.result }}
           path: .chart
 
       - name: Set up Kubernetes config
@@ -180,4 +186,4 @@ jobs:
         env:
           KUBECONFIG: /tmp/config
         run: |
-          helm upgrade --install release .chart/Chart-${{ steps.chart_version.outputs.version }}.tgz --namespace test-runners
+          helm upgrade --install release .chart/Chart-${{ steps.chart_version.outputs.result }}.tgz --namespace test-runners
