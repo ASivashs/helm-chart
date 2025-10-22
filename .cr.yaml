@@ -2,6 +2,6 @@ release-name-template: Chart-{{ .Version }}
 owner: ASivashs
 repo: charts
 remote: origin
-target-branch: main
+target-branch: gh-pages
 key: ASivashs
 generate-release-notes: true
