@@ -147,16 +147,23 @@ jobs:
       - name: Package helm
         run: helm package ${{ env.HELM_DIR }} --destination ${{ env.RELEASE_DEST_DIR }}
 
-      - name: Release artifact
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Release
+        uses: helm/chart-releaser-action@v1.7.0
         with:
-          tag_name: v${{ github.ref_name }}
-          name: Chart v${{ github.ref_name }}
-          files: ${{ env.RELEASE_DEST_DIR }}/*.tgz
-          generate_release_notes: true
+          charts_dir: ${{ env.HELM_DIR }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      # - name: Release artifact
+      #   uses: softprops/action-gh-release@v1
+      #   if: startsWith(github.ref, 'refs/tags/')
+      #   with:
+      #     tag_name: v${{ github.ref_name }}
+      #     name: Chart v${{ github.ref_name }}
+      #     files: ${{ env.RELEASE_DEST_DIR }}/*.tgz
+      #     generate_release_notes: true
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
     runs-on: ubuntu-24.04

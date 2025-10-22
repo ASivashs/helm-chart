@@ -4,14 +4,13 @@ on:
   pull_request:
     branches:
       - master
-      - develop
-    paths-ignore:
-      - "*.md"
-      - ".github/workflows/**"
-      - "backend/.dockerignore"
-      - ".gitignore"
-      - "helm-chart/.helmignore"
-      - "helm-chart/Chart.yaml"
+    # paths-ignore:
+    #   - "*.md"
+    #   - ".github/workflows/**"
+    #   - "backend/.dockerignore"
+    #   - ".gitignore"
+    #   - "helm-chart/.helmignore"
+    #   - "helm-chart/Chart.yaml"
 
 env:
   BACKEND_DIR: backend
