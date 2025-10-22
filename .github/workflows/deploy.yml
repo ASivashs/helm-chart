@@ -152,7 +152,7 @@ jobs:
         with:
           charts_dir: ${{ env.HELM_DIR }}
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       # - name: Release artifact
       #   uses: softprops/action-gh-release@v1
