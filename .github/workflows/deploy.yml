@@ -153,6 +153,18 @@ jobs:
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
+      - name: Get chart version
+        id: chart_version
+        uses: mikefarah/yq@v4.40.5
+        with:
+          cmd: yq '.version' ${{ env.HELM_DIR }}/Chart.yaml
+
+      - name: Upload packaged charts as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Chart-${{ steps.chart_version.outputs.result }}
+          path: .cr-release-packages/*.tgz
+
   deploy:
     runs-on: self-hosted
     needs:
