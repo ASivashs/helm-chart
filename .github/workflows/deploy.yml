@@ -190,13 +190,19 @@ jobs:
           name: Chart-${{ steps.chart_version.outputs.result }}
           path: .chart
 
-      - name: Set up Kubernetes config
+      - name: Set up KUBECONFIG
         run: echo "${{ secrets.KUBECONFIG }}" > /tmp/config
 
       - name: Check config
         run: |
           kubectl --kubeconfig=/tmp/config config view --minify
           kubectl --kubeconfig=/tmp/config cluster-info || true
+
+      - name: Create or Kubernetes app secrets
+        run: |
+          kubectl --kubeconfig=/tmp/config create secret generic app-secrets \ 
+          --from-literal=MYSQL_PASSWORD="${{ secrets.MYSQL_PASSWORD }}" \
+          --from-literal=MYSQL_ROOT_PASSWORD="${{ secrets.MYSQL_ROOT_PASSWORD }}"
 
       - name: Deploy Helm chart
         env:

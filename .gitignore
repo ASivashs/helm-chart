@@ -5,3 +5,4 @@ kubeconfig.txt
 kubeconfig.yaml
 test-deploy-user.yml
 deploy_commands.txt
+.env
