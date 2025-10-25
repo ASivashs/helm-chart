@@ -190,6 +190,11 @@ jobs:
           name: Chart-${{ steps.chart_version.outputs.result }}
           path: .chart
 
+      - name: ls and pwd
+        run: |
+          ls -la 
+          pwd
+
       - name: Set up KUBECONFIG
         run: echo "${{ secrets.KUBECONFIG }}" > /tmp/config
 
