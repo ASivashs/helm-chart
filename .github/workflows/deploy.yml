@@ -4,16 +4,16 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - "*.md"
-      - ".github/workflows/**"
-      - "backend/.dockerignore"
-      - ".gitignore"
-      - "backend/.flake8"
-      - "backend/pyproject.toml"
-      - "frontend/eslint.config.js"
-      - "helm-chart/.helmignore"
-      - "helm-chart/Chart.yaml"
+    # paths-ignore:
+    #   - "*.md"
+    #   - ".github/workflows/**"
+    #   - "backend/.dockerignore"
+    #   - ".gitignore"
+    #   - "backend/.flake8"
+    #   - "backend/pyproject.toml"
+    #   - "frontend/eslint.config.js"
+    #   - "helm-chart/.helmignore"
+    #   - "helm-chart/Chart.yaml"
 
 env:
   BACKEND_IMAGE_NAME: antoni0832/backend-app
