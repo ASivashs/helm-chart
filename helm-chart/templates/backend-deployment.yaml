@@ -29,12 +29,12 @@ spec:
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: app-secrets
+              name: test-secret
               key: MYSQL_PASSWORD
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: app-secrets
+              name: test-secret
               key: MYSQl_ROOT_PASSWORD
         - name: MYSQL_HOST
           value: "{{ .Release.Name }}-mysql"
