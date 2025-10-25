@@ -187,7 +187,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: Chart-${{ steps.chart_version.outputs.result }}.tgz
+          name: helm-chart-${{ steps.chart_version.outputs.result }}.tgz
           path: .chart
 
       - name: ls and pwd
@@ -207,5 +207,5 @@ jobs:
         env:
           KUBECONFIG: /tmp/config
         run: |
-          helm --kubeconfig=/tmp/config upgrade --install release .chart/Chart-${{ steps.chart_version.outputs.result }}.tgz \
+          helm --kubeconfig=/tmp/config upgrade --install release .chart/helm-chart-${{ steps.chart_version.outputs.result }}.tgz \
           --namespace test-runners --insecure-skip-tls-verify
