@@ -200,7 +200,7 @@ jobs:
 
       - name: Create Kubernetes app secrets
         run: |
-          kubectl --kubeconfig=/tmp/config create secret generic app-secrets \ 
+          kubectl --kubeconfig=/tmp/config create secret generic app-secrets \
           --insecure-skip-tls-verify \
           --from-literal=MYSQL_PASSWORD="${{ secrets.MYSQL_PASSWORD }}" \
           --from-literal=MYSQL_ROOT_PASSWORD="${{ secrets.MYSQL_ROOT_PASSWORD }}"
