@@ -35,7 +35,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: test-secret
-              key: MYSQl_ROOT_PASSWORD
+              key: MYSQL_ROOT_PASSWORD
         - name: MYSQL_HOST
           value: "{{ .Release.Name }}-mysql"
         - name: MYSQL_PORT
