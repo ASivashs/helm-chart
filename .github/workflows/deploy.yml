@@ -6,14 +6,14 @@ on:
       - main
     paths-ignore:
       - "*.md"
-    #   - ".github/workflows/**"
-    #   - "backend/.dockerignore"
-    #   - ".gitignore"
-    #   - "backend/.flake8"
-    #   - "backend/pyproject.toml"
-    #   - "frontend/eslint.config.js"
-    #   - "helm-chart/.helmignore"
-    #   - "helm-chart/Chart.yaml"
+      - ".github/workflows/**"
+      - "backend/.dockerignore"
+      - ".gitignore"
+      - "backend/.flake8"
+      - "backend/pyproject.toml"
+      - "frontend/eslint.config.js"
+      - "helm-chart/.helmignore"
+      - "helm-chart/Chart.yaml"
 
 env:
   BACKEND_IMAGE_NAME: antoni0832/backend-app
@@ -149,14 +149,6 @@ jobs:
 
       - name: Package helm
         run: helm package ${{ env.HELM_DIR }} --destination ${{ env.RELEASE_DEST_DIR }}
-
-      - name: Release
-        uses: helm/chart-releaser-action@v1.7.0
-        with:
-          charts_dir: .
-          config: .cr.yaml
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Get chart version
         id: chart_version
