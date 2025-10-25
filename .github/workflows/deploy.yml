@@ -198,7 +198,7 @@ jobs:
           kubectl --kubeconfig=/tmp/config config view --minify --insecure-skip-tls-verify
           kubectl --kubeconfig=/tmp/config cluster-info --insecure-skip-tls-verify || true
 
-      - name: Create or Kubernetes app secrets
+      - name: Create Kubernetes app secrets
         run: |
           kubectl --kubeconfig=/tmp/config create secret generic app-secrets \ 
           --insecure-skip-tls-verify \
