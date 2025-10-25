@@ -27,15 +27,17 @@ spec:
         - name: MYSQL_USER
           value: "user"
         - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: test-secret
-              key: MYSQL_PASSWORD
+          value: "user"
+          # valueFrom:
+          #   secretKeyRef:
+          #     name: app-secrets
+          #     key: MYSQL_PASSWORD
         - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: test-secret
-              key: MYSQL_ROOT_PASSWORD
+          value: "root"
+          # valueFrom:
+          #   secretKeyRef:
+          #     name: app-secrets
+          #     key: MYSQl_ROOT_PASSWORD
         - name: MYSQL_HOST
           value: "{{ .Release.Name }}-mysql"
         - name: MYSQL_PORT
