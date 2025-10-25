@@ -190,11 +190,6 @@ jobs:
       - name: Set up KUBECONFIG
         run: echo "${{ secrets.KUBECONFIG }}" > /tmp/config
 
-      - name: Check config
-        run: |
-          kubectl --kubeconfig=/tmp/config config view --insecure-skip-tls-verify
-          kubectl --kubeconfig=/tmp/config cluster-info --insecure-skip-tls-verify || true
-
       - name: Deploy Helm chart
         env:
           KUBECONFIG: /tmp/config
