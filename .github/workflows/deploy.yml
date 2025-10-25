@@ -187,7 +187,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: Chart-${{ steps.chart_version.outputs.result }}
+          name: Chart-${{ steps.chart_version.outputs.result }}.tgz
           path: .chart
 
       - name: ls and pwd
